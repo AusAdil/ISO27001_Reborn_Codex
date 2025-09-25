@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ISO 27001 Readiness Navigator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background-color: #f7f9fc;
+        color: #102a43;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #f7f9fc 0%, #eef2f8 100%);
+      }
+      .app-shell {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 16px 64px;
+      }
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 32px;
+        text-align: left;
+      }
+      header h1 {
+        font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+        margin: 0;
+        color: #0b3d91;
+      }
+      header p {
+        margin: 0;
+        color: #486581;
+        max-width: 720px;
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 20px 45px -20px rgba(15, 58, 98, 0.25);
+        border: 1px solid rgba(15, 58, 98, 0.08);
+      }
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 16px;
+        font-size: 1.4rem;
+        color: #0b3d91;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #1f3c6d;
+      }
+      input[type='text'],
+      input[type='url'],
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(15, 58, 98, 0.2);
+        font-size: 1rem;
+        box-sizing: border-box;
+        background: #fdfefe;
+      }
+      textarea {
+        min-height: 80px;
+      }
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 12px 24px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        background: #0b3d91;
+        color: #ffffff;
+      }
+      button.secondary {
+        background: #e4edf8;
+        color: #0b3d91;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      button:not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px -18px rgba(11, 61, 145, 0.7);
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .grid.two {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .grid.three {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      .question-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .option-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .option {
+        border: 1px solid rgba(15, 58, 98, 0.18);
+        border-radius: 12px;
+        padding: 14px 16px;
+        background: #ffffff;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .option.selected {
+        border-color: #0b3d91;
+        box-shadow: 0 12px 24px -18px rgba(11, 61, 145, 0.7);
+      }
+      .progress-bar {
+        height: 12px;
+        background: rgba(11, 61, 145, 0.15);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-bar span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #0b3d91 0%, #2ba6ff 100%);
+      }
+      .score-display {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0b3d91;
+      }
+      .score-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(43, 166, 255, 0.12);
+        color: #0b3d91;
+        font-weight: 600;
+      }
+      .theme-card {
+        border-radius: 16px;
+        padding: 16px;
+        background: #ffffff;
+        border: 1px solid rgba(15, 58, 98, 0.1);
+        box-shadow: 0 18px 40px -24px rgba(15, 58, 98, 0.35);
+      }
+      .gap-item {
+        border-left: 4px solid #0b3d91;
+        padding-left: 16px;
+      }
+      .roadmap-item {
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(15, 58, 98, 0.12);
+        background: #ffffff;
+      }
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .badge.quick {
+        background: rgba(56, 178, 172, 0.15);
+        color: #056674;
+      }
+      .badge.medium {
+        background: rgba(255, 193, 7, 0.18);
+        color: #8a5800;
+      }
+      .badge.long {
+        background: rgba(155, 109, 255, 0.15);
+        color: #4b2f91;
+      }
+      .learning-grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+      .learning-card {
+        padding: 18px;
+        border-radius: 14px;
+        background: #ffffff;
+        border: 1px solid rgba(15, 58, 98, 0.1);
+      }
+      @media (max-width: 768px) {
+        .app-shell {
+          padding: 16px;
+        }
+        header {
+          text-align: left;
+        }
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+      const { useState, useEffect, useMemo } = React;
+
+      const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:4000'
+        : 'http://localhost:4000';
+
+      const LoadingState = () => (
+        <div className="card" role="status" aria-live="polite">
+          <p>Loading assessment experience…</p>
+        </div>
+      );
+
+      const ErrorBanner = ({ message }) => (
+        <div
+          role="alert"
+          style={{
+            background: 'rgba(255, 99, 71, 0.12)',
+            border: '1px solid rgba(255, 99, 71, 0.4)',
+            color: '#7f1d1d',
+            padding: '16px',
+            borderRadius: '12px',
+            marginBottom: '16px'
+          }}
+        >
+          {message}
+        </div>
+      );
+
+      const OnboardingWizard = ({ options, onComplete, initial }) => {
+        const [form, setForm] = useState(
+          initial || {
+            organisationSize: '',
+            industry: '',
+            locations: '',
+            hostingModel: { cloud: false, 'on-prem': false },
+            remoteWork: false,
+            supplierReliance: '',
+            criticalAssets: []
+          }
+        );
+
+        const toggleHosting = (key) => {
+          setForm((prev) => ({
+            ...prev,
+            hostingModel: { ...prev.hostingModel, [key]: !prev.hostingModel[key] }
+          }));
+        };
+
+        const toggleAsset = (asset) => {
+          setForm((prev) => {
+            const exists = prev.criticalAssets.includes(asset);
+            return {
+              ...prev,
+              criticalAssets: exists
+                ? prev.criticalAssets.filter((item) => item !== asset)
+                : [...prev.criticalAssets, asset]
+            };
+          });
+        };
+
+        const isValid = () =>
+          form.organisationSize &&
+          form.industry &&
+          form.supplierReliance &&
+          (form.hostingModel.cloud || form.hostingModel['on-prem']);
+
+        const handleSubmit = (event) => {
+          event.preventDefault();
+          if (!isValid()) {
+            return;
+          }
+          const payload = {
+            ...form,
+            locations: form.locations
+              .split(',')
+              .map((item) => item.trim())
+              .filter(Boolean),
+            hostingModel: Object.entries(form.hostingModel)
+              .filter(([, active]) => active)
+              .map(([name]) => name)
+          };
+          onComplete(payload);
+        };
+
+        return (
+          <form className="card" onSubmit={handleSubmit}>
+            <h2>Let&apos;s tailor the scope</h2>
+            <p style={{ color: '#486581', marginTop: '-8px' }}>
+              Tell us about your organisation so we can focus on what matters.
+            </p>
+            <div className="grid two" style={{ marginTop: '24px' }}>
+              <div>
+                <label htmlFor="organisationSize">Organisation size</label>
+                <select
+                  id="organisationSize"
+                  value={form.organisationSize}
+                  onChange={(event) => setForm({ ...form, organisationSize: event.target.value })}
+                  required
+                >
+                  <option value="">Select size</option>
+                  {options.organisationSizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="industry">Industry</label>
+                <select
+                  id="industry"
+                  value={form.industry}
+                  onChange={(event) => setForm({ ...form, industry: event.target.value })}
+                  required
+                >
+                  <option value="">Select industry</option>
+                  {options.industries.map((industry) => (
+                    <option key={industry} value={industry}>
+                      {industry}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="locations">Locations in scope (comma separated)</label>
+                <input
+                  id="locations"
+                  type="text"
+                  placeholder="Sydney, Melbourne"
+                  value={form.locations}
+                  onChange={(event) => setForm({ ...form, locations: event.target.value })}
+                />
+              </div>
+              <div>
+                <label>Hosting model</label>
+                <div className="grid two">
+                  {options.hostingModels.map((model) => (
+                    <button
+                      type="button"
+                      key={model}
+                      className={form.hostingModel[model] ? '' : 'secondary'}
+                      onClick={() => toggleHosting(model)}
+                      aria-pressed={form.hostingModel[model]}
+                    >
+                      {model === 'cloud' ? 'Cloud' : 'On-premises'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label htmlFor="supplierReliance">Supplier reliance</label>
+                <select
+                  id="supplierReliance"
+                  value={form.supplierReliance}
+                  onChange={(event) => setForm({ ...form, supplierReliance: event.target.value })}
+                  required
+                >
+                  <option value="">Select level</option>
+                  {options.supplierReliance.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="remoteWork">Remote work presence</label>
+                <select
+                  id="remoteWork"
+                  value={form.remoteWork ? 'yes' : 'no'}
+                  onChange={(event) => setForm({ ...form, remoteWork: event.target.value === 'yes' })}
+                >
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginTop: '24px' }}>
+              <label>Critical asset types</label>
+              <div className="grid two">
+                {options.criticalAssets.map((asset) => (
+                  <button
+                    type="button"
+                    key={asset}
+                    className={form.criticalAssets.includes(asset) ? '' : 'secondary'}
+                    onClick={() => toggleAsset(asset)}
+                    aria-pressed={form.criticalAssets.includes(asset)}
+                  >
+                    {asset}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{ marginTop: '32px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <button type="submit" disabled={!isValid()}>
+                Start assessment
+              </button>
+            </div>
+          </form>
+        );
+      };
+
+      const QuestionCard = ({ question, response, onSelect }) => {
+        const handleSelect = (value) => {
+          onSelect({ ...response, answer: value });
+        };
+
+        return (
+          <div className="question-wrapper" role="group" aria-labelledby={`question-${question.id}`}>
+            <div>
+              <div className="score-badge" style={{ marginBottom: '12px' }}>
+                {question.clause} · {question.theme}
+              </div>
+              <h2 id={`question-${question.id}`} style={{ marginTop: 0 }}>
+                {question.text}
+              </h2>
+            </div>
+            <div className="option-list">
+              {question.options.map((option) => (
+                <div
+                  key={option.value}
+                  className={`option ${response?.answer === option.value ? 'selected' : ''}`}
+                  onClick={() => handleSelect(option.value)}
+                  role="radio"
+                  tabIndex={0}
+                  aria-checked={response?.answer === option.value}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      handleSelect(option.value);
+                    }
+                  }}
+                >
+                  <strong>{option.label}</strong>
+                </div>
+              ))}
+            </div>
+            <div className="grid two" style={{ marginTop: '16px' }}>
+              <div>
+                <label htmlFor={`notes-${question.id}`}>Notes (optional)</label>
+                <textarea
+                  id={`notes-${question.id}`}
+                  value={response?.notes || ''}
+                  onChange={(event) => onSelect({ ...response, notes: event.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor={`evidence-${question.id}`}>Evidence link (optional)</label>
+                <input
+                  id={`evidence-${question.id}`}
+                  type="url"
+                  placeholder="https://..."
+                  value={response?.evidence || ''}
+                  onChange={(event) => onSelect({ ...response, evidence: event.target.value })}
+                />
+              </div>
+            </div>
+            <p style={{ color: '#486581', fontSize: '0.95rem' }}>
+              Weighting · Criticality {question.weight.criticality} × Impact {question.weight.impact}
+            </p>
+          </div>
+        );
+      };
+
+      const AssessmentFlow = ({ questions, responses, onUpdate, onSubmit, onBack }) => {
+        const [step, setStep] = useState(0);
+        const question = questions[step];
+        const progress = Math.round(((step + 1) / questions.length) * 100);
+
+        const goNext = () => {
+          if (step < questions.length - 1) {
+            setStep(step + 1);
+          } else {
+            onSubmit();
+          }
+        };
+
+        const goPrev = () => {
+          if (step === 0) {
+            onBack();
+            return;
+          }
+          setStep(Math.max(step - 1, 0));
+        };
+
+        const response = responses[question.id] || {};
+
+        return (
+          <div className="card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+              <div>
+                <h2 style={{ marginBottom: '8px' }}>Assessment</h2>
+                <p style={{ margin: 0, color: '#486581' }}>
+                  Question {step + 1} of {questions.length}
+                </p>
+              </div>
+              <div style={{ minWidth: '160px' }}>
+                <div className="progress-bar" aria-hidden="true">
+                  <span style={{ width: `${progress}%` }}></span>
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: '24px' }}>
+              <QuestionCard
+                question={question}
+                response={response}
+                onSelect={(value) => onUpdate(question.id, value)}
+              />
+            </div>
+            <div style={{ marginTop: '24px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <button type="button" className="secondary" onClick={goPrev}>
+                {step === 0 ? 'Back to onboarding' : 'Previous'}
+              </button>
+              <button type="button" onClick={goNext} disabled={!response.answer}>
+                {step === questions.length - 1 ? 'View results' : 'Next'}
+              </button>
+            </div>
+          </div>
+        );
+      };
+
+      const ScoreCard = ({ result }) => (
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <h2>Overall readiness</h2>
+              <div className="score-display" aria-live="polite">{result.overall.score}%</div>
+              <p style={{ color: '#486581' }}>
+                Baseline {result.overall.baseline}% → Latest {result.overall.latest}%
+              </p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div className="score-badge">Weighted denominator · {result.weightings.length} controls</div>
+            </div>
+          </div>
+        </div>
+      );
+
+      const ThemeSummary = ({ themes }) => (
+        <div className="card">
+          <h2>Theme scores</h2>
+          <div className="grid three">
+            {themes.map((theme) => (
+              <div key={theme.theme} className="theme-card">
+                <strong>{theme.theme}</strong>
+                <div style={{ fontSize: '2rem', fontWeight: 700, color: '#0b3d91', margin: '12px 0' }}>
+                  {theme.latest}%
+                </div>
+                <p style={{ margin: 0, color: '#486581', fontSize: '0.9rem' }}>
+                  Baseline {theme.baseline}%
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+
+      const GapList = ({ gaps }) => {
+        const topGaps = gaps
+          .slice()
+          .sort((a, b) => b.severityScore - a.severityScore)
+          .slice(0, 5);
+
+        if (!topGaps.length) {
+          return null;
+        }
+
+        return (
+          <div className="card">
+            <h2>Top gaps</h2>
+            <div className="grid">
+              {topGaps.map((gap) => (
+                <div key={gap.id} className="gap-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <strong>{gap.title}</strong>
+                    <span className={`badge ${gap.band === 'Quick Win' ? 'quick' : gap.band === 'Medium' ? 'medium' : 'long'}`}>
+                      {gap.band}
+                    </span>
+                  </div>
+                  <p style={{ margin: '8px 0', color: '#486581' }}>{gap.description}</p>
+                  <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+                    Effort · Tech {gap.effort.tech} · People {gap.effort.people} · Time {gap.effort.time.min}-{gap.effort.time.max} weeks
+                  </p>
+                  <p style={{ margin: '4px 0', color: '#0b3d91', fontSize: '0.9rem' }}>{gap.action}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      const Roadmap = ({ roadmap }) => {
+        if (!roadmap.length) {
+          return null;
+        }
+
+        return (
+          <div className="card">
+            <h2>Prioritised roadmap</h2>
+            <div className="grid">
+              {roadmap.slice(0, 9).map((item, index) => (
+                <div key={item.id} className="roadmap-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                    <div style={{ fontWeight: 700 }}>{index + 1}. {item.title}</div>
+                    <span className={`badge ${item.band === 'Quick Win' ? 'quick' : item.band === 'Medium' ? 'medium' : 'long'}`}>
+                      {item.band}
+                    </span>
+                  </div>
+                  <p style={{ margin: '8px 0', color: '#486581' }}>{item.action}</p>
+                  <p style={{ margin: '4px 0', fontSize: '0.9rem' }}>
+                    Dependencies: {item.dependencies && item.dependencies.length ? item.dependencies.join(', ') : 'None'}
+                  </p>
+                  <p style={{ margin: '0', fontSize: '0.9rem', color: '#1f3c6d' }}>
+                    Effort → Tech {item.effort.tech} · People {item.effort.people} · Time {item.effort.time.min}-{item.effort.time.max} weeks
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      const exportToPdf = (result) => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const margin = 40;
+        let y = margin;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text('ISO 27001 Readiness Summary', margin, y);
+        y += 28;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        doc.text(`Generated: ${new Date(result.timestamp).toLocaleString()}`, margin, y);
+        y += 24;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Overall score: ${result.overall.score}% (baseline ${result.overall.baseline}%)`, margin, y);
+        y += 22;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('Theme scores', margin, y);
+        y += 18;
+        doc.setFont('helvetica', 'normal');
+        result.themes.slice(0, 9).forEach((theme) => {
+          doc.text(`• ${theme.theme}: ${theme.latest}% (baseline ${theme.baseline}%)`, margin, y);
+          y += 16;
+        });
+
+        y += 8;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Top gaps', margin, y);
+        y += 18;
+        doc.setFont('helvetica', 'normal');
+        result.gaps
+          .slice()
+          .sort((a, b) => b.severityScore - a.severityScore)
+          .slice(0, 10)
+          .forEach((gap, index) => {
+            doc.text(
+              `${index + 1}. ${gap.title} (${gap.band}) – Effort T${gap.effort.tech}/P${gap.effort.people}/W${gap.effort.time.min}-${gap.effort.time.max}`,
+              margin,
+              y
+            );
+            y += 16;
+            if (y > 760) {
+              doc.addPage();
+              y = margin;
+            }
+          });
+
+        y += 8;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Next actions', margin, y);
+        y += 18;
+        doc.setFont('helvetica', 'normal');
+        result.roadmap.slice(0, 10).forEach((item, index) => {
+          doc.text(
+            `${index + 1}. ${item.title} – ${item.band}. Time ${item.effort.time.min}-${item.effort.time.max} weeks` +
+              (item.dependencies?.length ? ` (deps: ${item.dependencies.join(', ')})` : ''),
+            margin,
+            y
+          );
+          y += 16;
+          if (y > 760) {
+            doc.addPage();
+            y = margin;
+          }
+        });
+
+        doc.save('iso27001-readiness-summary.pdf');
+      };
+
+      const ResultsDashboard = ({ result, onRestart, onViewLearning }) => (
+        <div className="grid" style={{ gap: '24px' }}>
+          <ScoreCard result={result} />
+          <ThemeSummary themes={result.themes} />
+          <GapList gaps={result.gaps} />
+          <Roadmap roadmap={result.roadmap} />
+          <div className="card" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <button type="button" onClick={() => exportToPdf(result)}>Export one-page PDF</button>
+            <button type="button" className="secondary" onClick={onRestart}>Start new assessment</button>
+            <button type="button" className="secondary" onClick={onViewLearning}>Open learning hub</button>
+          </div>
+        </div>
+      );
+
+      const LearningHub = ({ learning, onBack }) => (
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <h2>Learning hub</h2>
+            <button type="button" className="secondary" onClick={onBack}>Back to results</button>
+          </div>
+          <p style={{ color: '#486581' }}>
+            Plain-English guidance explaining what each clause or control means, why it matters and how to uplift maturity.
+          </p>
+          <div className="learning-grid">
+            {Object.entries(learning).map(([control, content]) => (
+              <div key={control} className="learning-card">
+                <strong>{control}</strong>
+                <p style={{ margin: '12px 0 6px', color: '#1f3c6d' }}>What</p>
+                <p style={{ margin: '0 0 8px', color: '#486581' }}>{content.what}</p>
+                <p style={{ margin: '12px 0 6px', color: '#1f3c6d' }}>Why</p>
+                <p style={{ margin: '0 0 8px', color: '#486581' }}>{content.why}</p>
+                <p style={{ margin: '12px 0 6px', color: '#1f3c6d' }}>How</p>
+                <p style={{ margin: 0, color: '#486581' }}>{content.how}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+
+      const App = () => {
+        const [status, setStatus] = useState('loading');
+        const [error, setError] = useState('');
+        const [options, setOptions] = useState(null);
+        const [questions, setQuestions] = useState([]);
+        const [learning, setLearning] = useState({});
+        const [onboarding, setOnboarding] = useState(null);
+        const [responses, setResponses] = useState({});
+        const [result, setResult] = useState(null);
+        const [view, setView] = useState('onboarding');
+
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const [opt, qs, learn] = await Promise.all([
+                axios.get(`${API_BASE}/api/onboarding-options`),
+                axios.get(`${API_BASE}/api/questions`),
+                axios.get(`${API_BASE}/api/learning`)
+              ]);
+              setOptions(opt.data);
+              setQuestions(qs.data);
+              setLearning(learn.data);
+              setStatus('ready');
+            } catch (err) {
+              console.error(err);
+              setError('We could not load the assessment data. Please ensure the API is running on port 4000.');
+              setStatus('error');
+            }
+          };
+          fetchData();
+        }, []);
+
+        const handleOnboardingComplete = (details) => {
+          setOnboarding(details);
+          setResponses({});
+          setView('assessment');
+        };
+
+        const handleResponseUpdate = (questionId, value) => {
+          setResponses((prev) => ({
+            ...prev,
+            [questionId]: {
+              ...prev[questionId],
+              ...value
+            }
+          }));
+        };
+
+        const handleSubmitAssessment = async () => {
+          try {
+            setStatus('submitting');
+            const payload = {
+              onboarding,
+              responses: Object.entries(responses).map(([id, value]) => ({
+                id,
+                ...value
+              }))
+            };
+            const { data } = await axios.post(`${API_BASE}/api/assess`, payload);
+            setResult({ ...data, timestamp: data.timestamp || new Date().toISOString() });
+            setView('results');
+            setStatus('ready');
+          } catch (err) {
+            console.error(err);
+            setError('We were unable to calculate your readiness. Please try again.');
+            setStatus('ready');
+          }
+        };
+
+        const handleRestart = () => {
+          setOnboarding(null);
+          setResponses({});
+          setResult(null);
+          setView('onboarding');
+        };
+
+        if (status === 'loading') {
+          return (
+            <div className="app-shell">
+              <header>
+                <h1>ISO 27001 Readiness Navigator</h1>
+                <p>A guided diagnostic to visualise your ISO 27001:2022 posture and plan practical next steps.</p>
+              </header>
+              <LoadingState />
+            </div>
+          );
+        }
+
+        if (status === 'error') {
+          return (
+            <div className="app-shell">
+              <header>
+                <h1>ISO 27001 Readiness Navigator</h1>
+                <p>A guided diagnostic to visualise your ISO 27001:2022 posture and plan practical next steps.</p>
+              </header>
+              <ErrorBanner message={error} />
+            </div>
+          );
+        }
+
+        return (
+          <div className="app-shell">
+            <header>
+              <h1>ISO 27001 Readiness Navigator</h1>
+              <p>
+                Complete the onboarding, respond to the tailored controls, and receive a prioritised roadmap with effort estimates.
+              </p>
+            </header>
+            {error && <ErrorBanner message={error} />}
+            {view === 'onboarding' && options && (
+              <OnboardingWizard options={options} onComplete={handleOnboardingComplete} initial={onboarding} />
+            )}
+            {view === 'assessment' && questions.length > 0 && (
+              <AssessmentFlow
+                questions={questions}
+                responses={responses}
+                onUpdate={handleResponseUpdate}
+                onSubmit={handleSubmitAssessment}
+                onBack={() => setView('onboarding')}
+              />
+            )}
+            {view === 'results' && result && (
+              <ResultsDashboard
+                result={result}
+                onRestart={handleRestart}
+                onViewLearning={() => setView('learning')}
+              />
+            )}
+            {view === 'learning' && (
+              <LearningHub learning={learning} onBack={() => setView('results')} />
+            )}
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
