@@ -72,7 +72,8 @@ const questions = [
     id: 'CL6-1',
     clause: 'Clause 6.1',
     control: 'Risk management planning',
-    theme: 'Risk',
+    theme: 'Organisation',
+
     text: 'Do you have a regular and consistent process for identifying and assessing risks?',
     answerType: 'yes_no_partial',
     options: [
@@ -89,7 +90,7 @@ const questions = [
     id: 'CL6-2',
     clause: 'Clause 6.1.3',
     control: 'Risk treatment plans',
-    theme: 'Risk',
+    theme: 'Organisation',
     text: 'Do you create treatment plans for risks you identify?',
     answerType: 'yes_no_partial',
     options: [

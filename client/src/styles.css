@@ -81,6 +81,13 @@ select {
   color: inherit;
 }
 
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(43, 166, 255, 0.45);
+  outline-offset: 2px;
+}
+
 textarea {
   min-height: 80px;
 }
@@ -116,6 +123,12 @@ button:not(:disabled):hover {
   box-shadow: 0 12px 24px -18px rgba(11, 61, 145, 0.7);
 }
 
+button:focus-visible {
+  outline: 3px solid rgba(43, 166, 255, 0.6);
+  outline-offset: 2px;
+}
+
+
 .grid {
   display: grid;
   gap: 16px;
@@ -142,18 +155,37 @@ button:not(:disabled):hover {
 }
 
 .option {
-  border: 1px solid rgba(15, 58, 98, 0.18);
+  border: 2px solid rgba(15, 58, 98, 0.18);
   border-radius: 12px;
   padding: 14px 16px;
-  background: #ffffff;
+  background: #f8fbff;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  color: #102a43;
+  text-align: left;
+
 }
 
 .option.selected {
   border-color: #0b3d91;
+  background: #0b3d91;
+  color: #ffffff;
   box-shadow: 0 12px 24px -18px rgba(11, 61, 145, 0.7);
 }
+
+.option:hover {
+  border-color: rgba(11, 61, 145, 0.5);
+}
+
+.option:focus-visible {
+  outline: 3px solid rgba(43, 166, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.option-label {
+  font-weight: 600;
+}
+
 
 .progress-bar {
   height: 12px;
@@ -257,6 +289,183 @@ button:not(:disabled):hover {
   color: #0b3d91;
   font-weight: 500;
 }
+
+.chip button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.chip.warning {
+  background: rgba(159, 24, 48, 0.15);
+  color: #9f1830;
+}
+
+.chip-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chip-input__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(15, 58, 98, 0.2);
+  border-radius: 10px;
+  background: #fdfefe;
+}
+
+.chip-input__wrapper input {
+  border: none;
+  padding: 6px;
+  min-width: 160px;
+  flex: 1;
+}
+
+.chip-input__wrapper input:focus-visible {
+  outline: none;
+}
+
+.chip-input__wrapper.has-error {
+  border-color: rgba(159, 24, 48, 0.5);
+}
+
+.helper-text {
+  color: #627d98;
+}
+
+.error-text {
+  color: #9f1830;
+  display: block;
+  margin-top: 6px;
+}
+
+.info-banner {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(11, 61, 145, 0.25);
+  background: rgba(11, 61, 145, 0.08);
+  color: #0b3d91;
+}
+
+.question-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.question-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #102a43;
+}
+
+.question-meta {
+  margin: 0;
+  color: #627d98;
+  font-size: 0.95rem;
+}
+
+.question-notes textarea {
+  min-height: 96px;
+}
+
+.question-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evidence-actions {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.evidence-url-row {
+  display: flex;
+  gap: 8px;
+}
+
+.evidence-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.evidence-chip {
+  background: rgba(15, 58, 98, 0.12);
+}
+
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #102a43;
+}
+
+.assessment-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.assessment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.progress-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.assessment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.assessment-actions .action-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.inline-warning {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(159, 24, 48, 0.1);
+  color: #9f1830;
+  border: 1px solid rgba(159, 24, 48, 0.3);
+}
+
+.question-card input[type='file'] {
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px dashed rgba(15, 58, 98, 0.3);
+  background: #fdfefe;
+}
+
+.question-card input[type='file']:focus-visible {
+  outline: 3px solid rgba(43, 166, 255, 0.45);
+  outline-offset: 2px;
+}
+
 
 @media (max-width: 720px) {
   .card {

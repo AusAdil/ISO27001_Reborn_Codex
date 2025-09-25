@@ -1,141 +1,239 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import QuestionCard from './QuestionCard.jsx';
 
 const formatOptionValue = (value) => (typeof value === 'number' ? String(value) : value);
 
-const AssessmentFlow = ({ questions, responses, onUpdate, onSubmit, onBack }) => {
+const AssessmentFlow = ({
+  questions,
+  previewItems,
+  responses,
+  onUpdate,
+  onSubmit,
+  onAdjustScope,
+  buildUrl
+}) => {
   const [index, setIndex] = useState(0);
-  const total = questions.length;
+  const [validationError, setValidationError] = useState('');
+
+  const metaMap = useMemo(() => new Map((previewItems || []).map((item) => [item.id, item])), [previewItems]);
+
+  const inScopeQuestions = useMemo(() => {
+    if (!questions || questions.length === 0) {
+      return [];
+    }
+    if (!previewItems) {
+      return questions;
+    }
+    return questions.filter((question) => {
+      const meta = metaMap.get(question.id);
+      return !meta || meta.inScope !== false;
+    });
+  }, [questions, metaMap, previewItems]);
+
+  useEffect(() => {
+    if (index >= inScopeQuestions.length) {
+      setIndex(inScopeQuestions.length > 0 ? inScopeQuestions.length - 1 : 0);
+    }
+  }, [index, inScopeQuestions.length]);
+
+  const currentQuestion = inScopeQuestions[index];
+  const currentMeta = currentQuestion ? metaMap.get(currentQuestion.id) : null;
+  const currentResponse = currentQuestion ? responses[currentQuestion.id] || { evidence: [] } : { evidence: [] };
+
+  const isAnswered = (response) =>
+    response && response.answer !== undefined && response.answer !== null && response.answer !== '' && !response.skipped;
 
   const answeredCount = useMemo(
-    () => Object.values(responses).filter((response) => response && response.answer !== undefined && response.answer !== '').length,
-    [responses]
+    () =>
+      inScopeQuestions.reduce((total, question) => {
+        const response = responses[question.id];
+        return total + (isAnswered(response) ? 1 : 0);
+      }, 0),
+    [inScopeQuestions, responses]
   );
 
-  const progress = Math.round((answeredCount / total) * 100);
+  const completionRatio = inScopeQuestions.length > 0 ? answeredCount / inScopeQuestions.length : 0;
+  const progress = Math.round(completionRatio * 100);
+  const questionComplete = currentResponse.skipped || isAnswered(currentResponse);
 
-  const currentQuestion = questions[index];
-  const currentResponse = responses[currentQuestion.id] || {};
+  const ensureResponseInitialised = (questionId) => {
+    if (!responses[questionId]) {
+      onUpdate(questionId, { evidence: [] });
+    }
+  };
 
-  const handleOptionSelect = (value) => {
-    onUpdate(currentQuestion.id, {
-      answer: formatOptionValue(value)
-    });
+  const handleSelectOption = (value) => {
+    ensureResponseInitialised(currentQuestion.id);
+    onUpdate(currentQuestion.id, { answer: formatOptionValue(value), skipped: false });
+    setValidationError('');
   };
 
   const handleNotesChange = (value) => {
-    onUpdate(currentQuestion.id, {
-      notes: value
-    });
+    ensureResponseInitialised(currentQuestion.id);
+    onUpdate(currentQuestion.id, { notes: value });
   };
 
-  const handleEvidenceChange = (value) => {
-    onUpdate(currentQuestion.id, {
-      evidence: value
-    });
+  const handleAddEvidenceUrl = (url) => {
+    ensureResponseInitialised(currentQuestion.id);
+    const existing = currentResponse.evidence || [];
+    const nextEvidence = [...existing, { type: 'url', href: url }];
+    onUpdate(currentQuestion.id, { evidence: nextEvidence });
+  };
+
+  const handleUploadEvidenceFile = async (file) => {
+    ensureResponseInitialised(currentQuestion.id);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const { data } = await axios.post(buildUrl('/api/uploads'), formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      const existing = currentResponse.evidence || [];
+      const nextEvidence = [...existing, { type: 'file', id: data.fileId, name: data.filename }];
+      onUpdate(currentQuestion.id, { evidence: nextEvidence });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleRemoveEvidence = (indexToRemove) => {
+    ensureResponseInitialised(currentQuestion.id);
+    const existing = currentResponse.evidence || [];
+    const nextEvidence = existing.filter((_, index) => index !== indexToRemove);
+    onUpdate(currentQuestion.id, { evidence: nextEvidence });
+  };
+
+  const handleToggleEvidenceVerified = (value) => {
+    ensureResponseInitialised(currentQuestion.id);
+    onUpdate(currentQuestion.id, { evidenceVerified: value });
+  };
+
+  const handleSkip = () => {
+    ensureResponseInitialised(currentQuestion.id);
+    onUpdate(currentQuestion.id, { skipped: true, answer: null });
+    setValidationError('');
+  };
+
+  const handleUndoSkip = () => {
+    ensureResponseInitialised(currentQuestion.id);
+    onUpdate(currentQuestion.id, { skipped: false });
+    setValidationError('');
   };
 
   const goTo = (offset) => {
+    if (offset > 0 && !questionComplete) {
+      setValidationError('Select an answer or use Skip before continuing.');
+      return;
+    }
+    setValidationError('');
+
     setIndex((prev) => {
       const next = prev + offset;
       if (next < 0) {
         return 0;
       }
-      if (next >= total) {
-        return total - 1;
+
+      if (next >= inScopeQuestions.length) {
+        return inScopeQuestions.length - 1;
       }
       return next;
     });
   };
 
-  const isLastQuestion = index === total - 1;
+  const handleFinish = () => {
+    if (!questionComplete) {
+      setValidationError('Select an answer or use Skip before finishing.');
+      return;
+    }
+    if (completionRatio < 0.8) {
+      const confirmFinish = window.confirm(
+        'You have answered fewer than 80% of in-scope controls. This will limit the accuracy of insights. Continue?'
+      );
+      if (!confirmFinish) {
+        return;
+      }
+    }
+    onSubmit(completionRatio);
+  };
+
+  if (inScopeQuestions.length === 0) {
+    return (
+      <div className="card">
+        <h2>All controls excluded</h2>
+        <p style={{ color: '#486581' }}>
+          Your current onboarding excludes every control. Adjust the scope to bring some controls back into view.
+        </p>
+        <button type="button" onClick={onAdjustScope}>
+          Adjust scope
+        </button>
+      </div>
+    );
+  }
+
+  const isLastQuestion = index === inScopeQuestions.length - 1;
 
   return (
-    <div className="card">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+    <div className="card assessment-flow">
+      <div className="assessment-header">
         <div>
           <h2 style={{ marginBottom: 4 }}>Assessment</h2>
           <p style={{ margin: 0, color: '#486581' }}>
-            {currentQuestion.clause} · {currentQuestion.control}
+            Question {index + 1} of {inScopeQuestions.length} · Theme {currentQuestion.theme}
           </p>
         </div>
         <div className="score-badge" aria-live="polite">
-          Question {index + 1} of {total}
+          {answeredCount} of {inScopeQuestions.length} controls answered
         </div>
       </div>
 
-      <div style={{ marginTop: 24 }}>
+      <div className="progress-area">
         <div className="progress-bar" aria-hidden="true">
           <span style={{ width: `${Math.max(progress, 4)}%` }}></span>
         </div>
-        <p style={{ margin: '12px 0 0', color: '#486581' }}>
-          {progress}% of questions answered. Theme: <strong>{currentQuestion.theme}</strong>
-        </p>
+        <p style={{ margin: '12px 0 0', color: '#486581' }}>{progress}% of in-scope controls answered.</p>
       </div>
 
-      <div className="question-wrapper" style={{ marginTop: 24 }}>
-        <div>
-          <p style={{ fontSize: '1.2rem', fontWeight: 600, margin: '0 0 12px', color: '#102a43' }}>{currentQuestion.text}</p>
-          <p style={{ margin: 0, color: '#627d98' }}>
-            Criticality {currentQuestion.weight.criticality} × Impact {currentQuestion.weight.impact}
-            {currentQuestion.weight.defaultScope < 1 ? ` · Default scope ${currentQuestion.weight.defaultScope}` : ''}
-          </p>
-        </div>
-        <div className="option-list">
-          {currentQuestion.options.map((option) => {
-            const optionValue = formatOptionValue(option.value);
-            const selected = currentResponse.answer === optionValue;
-            return (
-              <button
-                key={optionValue}
-                type="button"
-                className={`option ${selected ? 'selected' : ''}`}
-                onClick={() => handleOptionSelect(optionValue)}
-                aria-pressed={selected}
-              >
-                <span style={{ fontWeight: 600 }}>{option.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <QuestionCard
+        question={currentQuestion}
+        meta={currentMeta}
+        response={currentResponse}
+        onSelectOption={handleSelectOption}
+        onNotesChange={handleNotesChange}
+        onAddEvidenceUrl={handleAddEvidenceUrl}
+        onUploadEvidenceFile={handleUploadEvidenceFile}
+        onRemoveEvidence={handleRemoveEvidence}
+        onToggleEvidenceVerified={handleToggleEvidenceVerified}
+        validationError={validationError}
+        resolveEvidenceUrl={(item) => buildUrl(`/api/uploads/${item.id}`)}
+      />
 
-      <div className="grid" style={{ gap: '16px', marginTop: 24 }}>
-        <div>
-          <label htmlFor={`notes-${currentQuestion.id}`}>Notes (optional)</label>
-          <textarea
-            id={`notes-${currentQuestion.id}`}
-            value={currentResponse.notes || ''}
-            onChange={(event) => handleNotesChange(event.target.value)}
-            placeholder="Add context, owners or known blockers."
-          />
-        </div>
-        <div>
-          <label htmlFor={`evidence-${currentQuestion.id}`}>Evidence link (optional)</label>
-          <input
-            id={`evidence-${currentQuestion.id}`}
-            type="url"
-            value={currentResponse.evidence || ''}
-            onChange={(event) => handleEvidenceChange(event.target.value)}
-            placeholder="https://…"
-          />
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginTop: 24, flexWrap: 'wrap' }}>
+      <div className="assessment-actions">
         <div className="chip-row">
-          {(currentQuestion.dependencies || []).length > 0 && (
-            <div className="chip" aria-label="Dependencies">
-              Depends on: {currentQuestion.dependencies.join(', ')}
-            </div>
-          )}
-          <div className="chip" aria-label="Clause and theme">
-            {currentQuestion.clause} · {currentQuestion.theme}
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <button type="button" className="secondary" onClick={onBack}>
+          <button type="button" className="secondary" onClick={onAdjustScope}>
             Adjust scope
           </button>
+          {currentResponse.skipped ? (
+            <span className="chip warning">Skipped</span>
+          ) : (
+            <span className="chip">
+              {currentMeta && typeof currentMeta.effectiveWeight === 'number'
+                ? `Weight ${currentMeta.effectiveWeight.toFixed(2)}`
+                : 'Default weight'}
+            </span>
+          )}
+        </div>
+        <div className="action-buttons">
+          {currentResponse.skipped ? (
+            <button type="button" className="secondary" onClick={handleUndoSkip}>
+              Undo skip
+            </button>
+          ) : (
+            <button type="button" className="secondary" onClick={handleSkip}>
+              Skip
+            </button>
+          )}
+
           <button type="button" className="secondary" onClick={() => goTo(-1)} disabled={index === 0}>
             Previous
           </button>
@@ -145,7 +243,8 @@ const AssessmentFlow = ({ questions, responses, onUpdate, onSubmit, onBack }) =>
             </button>
           )}
           {isLastQuestion && (
-            <button type="button" onClick={onSubmit} disabled={answeredCount === 0}>
+            <button type="button" onClick={handleFinish}>
+
               Generate readiness report
             </button>
           )}
