@@ -15,14 +15,19 @@ const DEFAULT_FORM = {
   notes: ''
 };
 
-const createInitialState = (initial = {}) => ({
-  ...DEFAULT_FORM,
-  ...initial,
-  locations: Array.isArray(initial.locations) ? initial.locations : DEFAULT_FORM.locations,
-  hostingModel: Array.isArray(initial.hostingModel) ? initial.hostingModel : DEFAULT_FORM.hostingModel,
-  criticalAssets: Array.isArray(initial.criticalAssets) ? initial.criticalAssets : DEFAULT_FORM.criticalAssets,
-  annexAExclusions: Array.isArray(initial.annexAExclusions) ? initial.annexAExclusions : DEFAULT_FORM.annexAExclusions
-});
+const createInitialState = (initial = {}) => {
+  const safeInitial = initial && typeof initial === 'object' ? initial : {};
+  return {
+    ...DEFAULT_FORM,
+    ...safeInitial,
+    locations: Array.isArray(safeInitial.locations) ? safeInitial.locations : DEFAULT_FORM.locations,
+    hostingModel: Array.isArray(safeInitial.hostingModel) ? safeInitial.hostingModel : DEFAULT_FORM.hostingModel,
+    criticalAssets: Array.isArray(safeInitial.criticalAssets) ? safeInitial.criticalAssets : DEFAULT_FORM.criticalAssets,
+    annexAExclusions: Array.isArray(safeInitial.annexAExclusions)
+      ? safeInitial.annexAExclusions
+      : DEFAULT_FORM.annexAExclusions
+  };
+};
 
 const stepValidators = [
   (form) => {
