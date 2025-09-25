@@ -35,21 +35,46 @@ const upload = multer({ storage });
 
 const onboardingOptions = {
   organisationSizes: ['1-50', '51-250', '251-1000', '1000+'],
-  industries: ['SaaS', 'Healthcare', 'Finance', 'Government', 'Education', 'Other'],
+  industries: [
+    'SaaS & software',
+    'Healthcare & life sciences',
+    'Financial services & fintech',
+    'Government & public sector',
+    'Education & research',
+    'Manufacturing & industrial',
+    'Retail & eCommerce',
+    'Energy & utilities',
+    'Professional services',
+    'Media & communications',
+    'Logistics & transport',
+    'Critical infrastructure & resources',
+    'Not-for-profit / charity',
+    'Legal & compliance',
+    'Construction & engineering',
+    'Other'
+  ],
+
   hostingModels: [
     { id: 'cloud', label: 'Cloud' },
     { id: 'on-prem', label: 'On-premises' }
   ],
   supplierReliance: ['Low', 'Medium', 'High'],
   criticalAssets: [
-    'Customer data',
+    'Customer data and account details',
     'Personal data (PII)',
+    'Sensitive personal information (SPI)',
     'Protected health information (PHI)',
-    'Payment card information (PCI)',
+    'Payment card information (PCI DSS)',
     'Intellectual property (IP)',
-    'Operational technology',
+    'Source code and product designs',
+    'Trade secrets and R&D artefacts',
+    'Operational technology and ICS',
     'Financial records and reporting',
-    'Employee records'
+    'Regulated financial data (e.g. APRA)',
+    'Employee records and HR data',
+    'Customer support transcripts & recordings',
+    'Supplier & contract data'
+
   ],
   annexAControls: questions
     .filter((question) => question.id.startsWith('A.'))
