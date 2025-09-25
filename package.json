@@ -1,0 +1,14 @@
+{
+  "name": "iso27001_reborn_codex",
+  "version": "1.0.0",
+  "description": "ISO 27001 readiness self-assessment MVP",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node server/index.js --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
