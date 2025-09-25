@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import ChipInput from './ChipInput.jsx';
 
+
 const DEFAULT_FORM = {
   organisationName: '',
   organisationSize: '',
@@ -128,6 +129,7 @@ const OnboardingWizard = ({ options, onComplete, initial }) => {
               id="organisation-size"
               value={form.organisationSize}
               onChange={(event) => handleChange('organisationSize', event.target.value)}
+
             >
               <option value="" disabled>
                 Select size band
@@ -266,6 +268,7 @@ const OnboardingWizard = ({ options, onComplete, initial }) => {
               })}
             </div>
             {displayErrors.supplierReliance && <small className="error-text">{displayErrors.supplierReliance}</small>}
+
           </div>
           <div className="card">
             <label>Critical asset types</label>
@@ -326,6 +329,7 @@ const OnboardingWizard = ({ options, onComplete, initial }) => {
             </button>
           ) : (
             <button type="submit" disabled={!isStepValid}>
+
               Start assessment
             </button>
           )}

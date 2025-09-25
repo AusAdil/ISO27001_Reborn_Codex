@@ -127,11 +127,13 @@ const AssessmentFlow = ({
       return;
     }
     setValidationError('');
+
     setIndex((prev) => {
       const next = prev + offset;
       if (next < 0) {
         return 0;
       }
+
       if (next >= inScopeQuestions.length) {
         return inScopeQuestions.length - 1;
       }
@@ -231,6 +233,7 @@ const AssessmentFlow = ({
               Skip
             </button>
           )}
+
           <button type="button" className="secondary" onClick={() => goTo(-1)} disabled={index === 0}>
             Previous
           </button>
@@ -241,6 +244,7 @@ const AssessmentFlow = ({
           )}
           {isLastQuestion && (
             <button type="button" onClick={handleFinish}>
+
               Generate readiness report
             </button>
           )}

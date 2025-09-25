@@ -33,6 +33,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+
 const onboardingOptions = {
   organisationSizes: ['1-50', '51-250', '251-1000', '1000+'],
   industries: ['SaaS', 'Healthcare', 'Finance', 'Government', 'Education', 'Other'],
@@ -223,6 +224,7 @@ function createServer() {
   }
 
   return app;
+
 }
 
 if (require.main === module) {
@@ -234,6 +236,7 @@ if (require.main === module) {
         answer: index % 2 === 0 ? 'yes' : 'partial'
       })),
       {
+
         organisationSize: '51-250',
         hostingModel: ['cloud'],
         supplierReliance: 'Medium',

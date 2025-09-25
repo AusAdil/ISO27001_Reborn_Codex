@@ -73,6 +73,7 @@ const questions = [
     clause: 'Clause 6.1',
     control: 'Risk management planning',
     theme: 'Organisation',
+
     text: 'Do you have a regular and consistent process for identifying and assessing risks?',
     answerType: 'yes_no_partial',
     options: [
