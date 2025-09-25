@@ -77,7 +77,7 @@ const QuestionCard = ({
         <div>
           <p className="question-title">{question.text}</p>
           <p className="question-meta">
-            {question.clause} · {question.control} · {question.theme}
+            {question.clause} · {question.control}
           </p>
           <p className="question-meta">
             Weight: Scope {weightSummary.scope} × Criticality {weightSummary.criticality} × Impact {weightSummary.impact} ={' '}

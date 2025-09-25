@@ -35,6 +35,23 @@ const questions = [
     dependencies: []
   },
   {
+    id: 'CL4-3',
+    clause: 'Clause 4.3',
+    control: 'Determining the scope of the ISMS',
+    theme: 'Organisation',
+    text: 'Is the scope of your ISMS documented, approved and communicated to stakeholders?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, scope statement current and communicated' },
+      { value: 'partial', label: 'Partially, draft scope not widely shared' },
+      { value: 'no', label: 'No, scope not defined' }
+    ],
+    weight: { criticality: 1.5, impact: 4, defaultScope: 1.0 },
+    effort: { tech: 1, people: 3, time: { min: 2, max: 3 } },
+    actionGuidance: 'Document boundaries, approvals and interfaces for the ISMS and brief all impacted teams.',
+    dependencies: ['CL4-1', 'CL4-2']
+  },
+  {
     id: 'CL5-1',
     clause: 'Clause 5.1',
     control: 'Leadership and commitment',
@@ -73,7 +90,6 @@ const questions = [
     clause: 'Clause 6.1',
     control: 'Risk management planning',
     theme: 'Organisation',
-
     text: 'Do you have a regular and consistent process for identifying and assessing risks?',
     answerType: 'yes_no_partial',
     options: [
@@ -119,6 +135,23 @@ const questions = [
     effort: { tech: 2, people: 4, time: { min: 2, max: 4 } },
     actionGuidance: 'Set measurable quarterly security objectives aligned to business goals.',
     dependencies: []
+  },
+  {
+    id: 'CL6-4',
+    clause: 'Clause 6.3',
+    control: 'Planning of changes',
+    theme: 'Organisation',
+    text: 'Do you assess information security impacts when planning organisational or technical changes?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, change plans include documented security assessment' },
+      { value: 'partial', label: 'Partially, considered for major projects only' },
+      { value: 'no', label: 'No formal security impact assessment for changes' }
+    ],
+    weight: { criticality: 1.0, impact: 4, defaultScope: 1.0 },
+    effort: { tech: 2, people: 4, time: { min: 2, max: 4 } },
+    actionGuidance: 'Extend change templates to cover security impacts, approvals and residual risk sign-off.',
+    dependencies: ['CL6-1']
   },
   {
     id: 'CL7-1',
@@ -174,6 +207,23 @@ const questions = [
     dependencies: []
   },
   {
+    id: 'CL7-5',
+    clause: 'Clause 7.4',
+    control: 'Communication',
+    theme: 'People',
+    text: 'Do you have defined communication plans for internal and external security updates?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, planned communications with identified audiences' },
+      { value: 'partial', label: 'Partially, ad hoc communications' },
+      { value: 'no', label: 'No structured communication approach' }
+    ],
+    weight: { criticality: 1.0, impact: 3, defaultScope: 1.0 },
+    effort: { tech: 1, people: 3, time: { min: 2, max: 3 } },
+    actionGuidance: 'Create a communications matrix covering security updates, incidents and stakeholder messaging.',
+    dependencies: ['CL5-1']
+  },
+  {
     id: 'CL7-4',
     clause: 'Clause 7.5',
     control: 'Documented information',
@@ -210,6 +260,40 @@ const questions = [
     effort: { tech: 5, people: 4, time: { min: 4, max: 8 } },
     actionGuidance: 'Deploy runbooks and monitor adherence with dashboards and reviews.',
     dependencies: ['CL7-4']
+  },
+  {
+    id: 'CL8-2',
+    clause: 'Clause 8.2',
+    control: 'Information security risk assessment',
+    theme: 'Organisation',
+    text: 'Do you perform risk assessments at planned intervals and when significant changes occur?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, scheduled and change-driven assessments completed' },
+      { value: 'partial', label: 'Partially, occasional assessments only' },
+      { value: 'no', label: 'No defined assessment cadence' }
+    ],
+    weight: { criticality: 1.5, impact: 5, defaultScope: 1.0 },
+    effort: { tech: 3, people: 4, time: { min: 3, max: 5 } },
+    actionGuidance: 'Set a risk assessment calendar and trigger reviews after material changes.',
+    dependencies: ['CL6-1']
+  },
+  {
+    id: 'CL8-3',
+    clause: 'Clause 8.3',
+    control: 'Information security risk treatment',
+    theme: 'Organisation',
+    text: 'Are risk treatment plans implemented, tracked and reviewed for effectiveness?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, treatment plans tracked to completion' },
+      { value: 'partial', label: 'Partially, progress tracked inconsistently' },
+      { value: 'no', label: 'No systematic follow-up on treatment plans' }
+    ],
+    weight: { criticality: 1.5, impact: 5, defaultScope: 1.0 },
+    effort: { tech: 2, people: 5, time: { min: 3, max: 5 } },
+    actionGuidance: 'Establish dashboards and governance to monitor risk treatments through closure.',
+    dependencies: ['CL6-2']
   },
   {
     id: 'CL9-1',
@@ -599,6 +683,25 @@ const questions = [
     dependencies: []
   },
   {
+    id: 'A14-2',
+    clause: 'Annex A.14',
+    control: 'Secure coding capability',
+    theme: 'Technology',
+    text: 'Do developers receive secure coding training aligned to your technology stack?',
+    answerType: 'maturity_1_5',
+    options: [
+      { value: 1, label: 'No secure coding training' },
+      { value: 2, label: 'Ad hoc training for some teams' },
+      { value: 3, label: 'Annual secure coding training for all developers' },
+      { value: 4, label: 'Role-based secure coding pathways with assessments' },
+      { value: 5, label: 'Continuous training with secure coding KPIs' }
+    ],
+    weight: { criticality: 1.0, impact: 3, defaultScope: 1.0 },
+    effort: { tech: 2, people: 4, time: { min: 3, max: 5 } },
+    actionGuidance: 'Roll out structured secure coding enablement and track completion in engineering metrics.',
+    dependencies: ['A14-1']
+  },
+  {
     id: 'A15-1',
     clause: 'Annex A.15',
     control: 'Supplier relationships',
@@ -729,8 +832,34 @@ const questions = [
     actionGuidance: 'Map personal data flows and implement privacy impact assessments.',
     dependencies: ['A18-1'],
     scopeRules: [
-      { field: 'criticalAssets', operator: 'intersects', value: ['Customer data', 'PHI', 'PCI'] }
+      {
+        field: 'criticalAssets',
+        operator: 'intersects',
+        value: [
+          'Customer data',
+          'Personal data (PII)',
+          'Protected health information (PHI)',
+          'Payment card information (PCI)'
+        ]
+      }
     ]
+  },
+  {
+    id: 'A18-3',
+    clause: 'Annex A.18',
+    control: 'Independent review of information security',
+    theme: 'Compliance',
+    text: 'Do you commission independent reviews of your ISMS to confirm its effectiveness?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, independent reviews completed to schedule' },
+      { value: 'partial', label: 'Partially, ad hoc or internal-only reviews' },
+      { value: 'no', label: 'No independent assurance activity' }
+    ],
+    weight: { criticality: 1.0, impact: 3, defaultScope: 1.0 },
+    effort: { tech: 1, people: 3, time: { min: 2, max: 4 } },
+    actionGuidance: 'Plan periodic independent reviews or audits and track remediation of findings.',
+    dependencies: ['CL9-2']
   },
   {
     id: 'A5-3',
@@ -750,6 +879,23 @@ const questions = [
     dependencies: ['A5-1']
   },
   {
+    id: 'A5-4',
+    clause: 'Annex A.5',
+    control: 'Threat intelligence',
+    theme: 'Incident',
+    text: 'Do you gather and act on threat intelligence relevant to your organisation and sector?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, curated feeds with defined actions' },
+      { value: 'partial', label: 'Partially, informal sharing only' },
+      { value: 'no', label: 'No threat intelligence process' }
+    ],
+    weight: { criticality: 1.0, impact: 3, defaultScope: 1.0 },
+    effort: { tech: 3, people: 3, time: { min: 3, max: 5 } },
+    actionGuidance: 'Subscribe to trusted sources, triage new intel and integrate learnings into controls and playbooks.',
+    dependencies: ['A16-1']
+  },
+  {
     id: 'A8-4',
     clause: 'Annex A.8',
     control: 'Return of assets',
@@ -765,6 +911,38 @@ const questions = [
     effort: { tech: 2, people: 3, time: { min: 2, max: 4 } },
     actionGuidance: 'Implement leaver checklist and coordinate HR and IT notifications.',
     dependencies: ['A9-2']
+  },
+  {
+    id: 'A8-5',
+    clause: 'Annex A.8',
+    control: 'Data leakage prevention',
+    theme: 'Technology',
+    text: 'Do you have controls to detect and prevent unauthorised disclosure of sensitive information?',
+    answerType: 'maturity_1_5',
+    options: [
+      { value: 1, label: 'No monitoring for data leakage' },
+      { value: 2, label: 'Manual checks on request' },
+      { value: 3, label: 'Basic DLP rules for key channels' },
+      { value: 4, label: 'Automated DLP with response workflows' },
+      { value: 5, label: 'Advanced analytics with continuous tuning' }
+    ],
+    weight: { criticality: 1.0, impact: 4, defaultScope: 1.0 },
+    effort: { tech: 4, people: 3, time: { min: 3, max: 6 } },
+    actionGuidance: 'Deploy DLP tooling across email, endpoints and cloud storage with defined response playbooks.',
+    dependencies: ['A8-2'],
+    scopeRules: [
+      {
+        field: 'criticalAssets',
+        operator: 'intersects',
+        value: [
+          'Customer data',
+          'Personal data (PII)',
+          'Protected health information (PHI)',
+          'Payment card information (PCI)',
+          'Intellectual property (IP)'
+        ]
+      }
+    ]
   },
   {
     id: 'A13-2',
@@ -824,7 +1002,43 @@ const questions = [
     effort: { tech: 5, people: 4, time: { min: 4, max: 8 } },
     actionGuidance: 'Deploy central logging platform with alerting and defined response procedures.',
     dependencies: ['A16-1']
-  }
+  },
+  {
+    id: 'A12-5',
+    clause: 'Annex A.12',
+    control: 'Vulnerability management',
+    theme: 'Technology',
+    text: 'Do you run routine vulnerability scanning and remediate findings within defined timeframes?',
+    answerType: 'maturity_1_5',
+    options: [
+      { value: 1, label: 'No routine vulnerability scanning' },
+      { value: 2, label: 'Occasional scanning without SLAs' },
+      { value: 3, label: 'Scheduled scanning with basic remediation tracking' },
+      { value: 4, label: 'Risk-based remediation with dashboards' },
+      { value: 5, label: 'Continuous scanning with automated ticketing' }
+    ],
+    weight: { criticality: 1.5, impact: 5, defaultScope: 1.0 },
+    effort: { tech: 4, people: 4, time: { min: 4, max: 6 } },
+    actionGuidance: 'Define vulnerability SLAs, automate scanning, and integrate remediation into sprint rituals.',
+    dependencies: ['A12-1']
+  },
+  {
+    id: 'A12-6',
+    clause: 'Annex A.12',
+    control: 'Configuration management',
+    theme: 'Operations',
+    text: 'Are secure configuration baselines defined, implemented and periodically validated?',
+    answerType: 'yes_no_partial',
+    options: [
+      { value: 'yes', label: 'Yes, baselines enforced and monitored' },
+      { value: 'partial', label: 'Partially, baselines defined but not enforced' },
+      { value: 'no', label: 'No secure configuration standards' }
+    ],
+    weight: { criticality: 1.0, impact: 4, defaultScope: 1.0 },
+    effort: { tech: 3, people: 3, time: { min: 3, max: 5 } },
+    actionGuidance: 'Publish hardening guides, automate configuration checks and review drift dashboards.',
+    dependencies: ['A12-1']
+  },
 ];
 
 module.exports = questions;

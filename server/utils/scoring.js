@@ -43,7 +43,6 @@ function determineScopeFactor(question, onboarding = {}, excludedControls = new 
     return 0;
   }
 
-
   const defaultScope = question.weight?.defaultScope ?? 1;
   if (!question.scopeRules || question.scopeRules.length === 0) {
     return defaultScope;
@@ -118,7 +117,6 @@ function fractionForResponse(question, response) {
     return MATURITY_MAP[numericValue] ?? 0;
   }
 
-
   return 0;
 }
 
@@ -163,7 +161,6 @@ function topoSortRoadmap(items) {
 
   function visit(item) {
     if (visited.has(item.id) || temp.has(item.id)) {
-
       return;
     }
     temp.add(item.id);
@@ -359,7 +356,6 @@ function calculateAssessment(questions, answers = [], onboarding = {}, options =
     items,
     gaps,
     roadmap
-
   };
 }
 
@@ -367,5 +363,4 @@ module.exports = {
   calculateAssessment,
   determineScopeFactor,
   fractionForResponse
-
 };

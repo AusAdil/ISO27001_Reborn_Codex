@@ -9,6 +9,11 @@ const learning = {
     why: 'Knowing who cares about your controls helps prioritise obligations.',
     how: 'Maintain a register with contacts, expectations and communication cadence.'
   },
+  'Clause 4.3': {
+    what: 'Define what parts of the business fall inside the ISMS.',
+    why: 'Clear scope boundaries stop audits drifting into areas you are not ready to evidence.',
+    how: 'Document the sites, services and teams covered and share the statement widely.'
+  },
   'Clause 5.1': {
     what: 'Leaders must visibly back the ISMS and provide direction.',
     why: 'Without sponsorship, resourcing and compliance stall quickly.',
@@ -34,6 +39,11 @@ const learning = {
     why: 'Objectives align security with business priorities and enable tracking.',
     how: 'Draft SMART goals, assign owners, and review quarterly.'
   },
+  'Clause 6.3': {
+    what: 'Plan how security is considered when you change processes, systems or structure.',
+    why: 'Unplanned changes can introduce risk and derail compliance commitments.',
+    how: 'Embed security impact questions and approvals into project and change templates.'
+  },
   'Clause 7.1': {
     what: 'Provide the people, tools and funding your ISMS needs.',
     why: 'Without resources, controls decay and projects stall.',
@@ -49,6 +59,11 @@ const learning = {
     why: 'Awareness lowers the chance of human-driven incidents.',
     how: 'Run campaigns, phishing simulations and onboarding refreshers.'
   },
+  'Clause 7.4': {
+    what: 'Coordinate internal and external security communications.',
+    why: 'Consistent messaging builds trust and keeps stakeholders informed during change or incidents.',
+    how: 'Maintain comms plans that nominate audiences, channels and spokespersons.'
+  },
   'Clause 7.5': {
     what: 'Control ISMS documents, records and evidence.',
     why: 'Version control avoids outdated guidance and audit failure.',
@@ -58,6 +73,16 @@ const learning = {
     what: 'Plan and control how operations deliver secure services.',
     why: 'Consistent execution reduces surprises and outages.',
     how: 'Use runbooks, monitoring and continual improvement loops.'
+  },
+  'Clause 8.2': {
+    what: 'Carry out risk assessments whenever context or scope changes.',
+    why: 'Fresh assessments keep the risk picture accurate and defensible.',
+    how: 'Schedule reviews and trigger reassessment after incidents or significant projects.'
+  },
+  'Clause 8.3': {
+    what: 'Treat identified risks and make sure actions land.',
+    why: 'Untracked treatments leave unacceptable exposure hanging around.',
+    how: 'Assign owners, track progress and verify residual risk is acceptable.'
   },
   'Clause 9.1': {
     what: 'Measure how well security performs.',

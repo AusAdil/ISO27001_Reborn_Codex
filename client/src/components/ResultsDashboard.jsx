@@ -8,7 +8,6 @@ const formatPercentage = (value) => {
   return `${(Number(value) * 100).toFixed(1)}%`;
 };
 
-
 const formatEffort = (effort) =>
   `${effort.tech.toFixed(1)} tech · ${effort.people.toFixed(1)} people · ${effort.time.min.toFixed(1)}-${effort.time.max.toFixed(1)} weeks`;
 
@@ -36,7 +35,6 @@ const summariseEvidence = (evidence = []) => {
   }
   return `Evidence: ${parts.join(', ')}`;
 };
-
 
 const exportToPdf = (result) => {
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -71,7 +69,6 @@ const exportToPdf = (result) => {
     y
   );
 
-
   y += 24;
   doc.setFont('helvetica', 'bold');
   doc.text('Theme scores', margin, y);
@@ -80,7 +77,6 @@ const exportToPdf = (result) => {
   result.themes.slice(0, 9).forEach((theme) => {
     const completeness = theme.answered === 0 ? 'Incomplete' : `${theme.answered}/${theme.inScope} answered`;
     doc.text(`${theme.theme}: ${formatPercentage(theme.latest)} (${completeness})`, margin, y);
-
     y += 16;
   });
 
@@ -107,7 +103,6 @@ const exportToPdf = (result) => {
       doc.text(`   ${evidenceSummary}`, margin, y);
       y += 16;
     }
-
   });
 
   y += 12;
@@ -127,7 +122,6 @@ const exportToPdf = (result) => {
       doc.text(`   ${evidenceSummary}`, margin, y);
       y += 16;
     }
-
   });
 
   doc.save('iso27001-readiness-summary.pdf');
@@ -154,7 +148,6 @@ const ScoreCard = ({ result, onResetBaseline }) => (
       <small style={{ color: '#627d98' }}>
         Baseline is captured after the first completed assessment and remains fixed until you reset it.
       </small>
-
     </div>
   </div>
 );
@@ -173,7 +166,6 @@ const ThemeSummary = ({ themes }) => (
           {theme.baseline !== null && (
             <small style={{ color: '#627d98' }}>Baseline {formatPercentage(theme.baseline)}</small>
           )}
-
         </div>
       ))}
     </div>
@@ -197,7 +189,6 @@ const GapList = ({ gaps }) => (
           {gap.evidence?.length ? (
             <small style={{ display: 'block', color: '#486581', marginTop: 4 }}>{summariseEvidence(gap.evidence)}</small>
           ) : null}
-
         </div>
       ))}
     </div>
@@ -235,7 +226,6 @@ const WeightingSummary = ({ items }) => (
     <p style={{ marginTop: 0, color: '#486581' }}>
       Scope factors reflect your onboarding selections. Out-of-scope controls are excluded from the denominator until you bring
       them back into scope.
-
     </p>
     <div style={{ overflowX: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
@@ -264,7 +254,6 @@ const WeightingSummary = ({ items }) => (
               <td style={{ padding: '8px 0', color: item.inScope ? '#0b3d91' : '#9f1830' }}>
                 {item.inScope ? (item.answered ? 'Answered' : 'Awaiting answer') : 'Out of scope'}
               </td>
-
             </tr>
           ))}
         </tbody>

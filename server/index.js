@@ -33,7 +33,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 const onboardingOptions = {
   organisationSizes: ['1-50', '51-250', '251-1000', '1000+'],
   industries: ['SaaS', 'Healthcare', 'Finance', 'Government', 'Education', 'Other'],
@@ -42,7 +41,16 @@ const onboardingOptions = {
     { id: 'on-prem', label: 'On-premises' }
   ],
   supplierReliance: ['Low', 'Medium', 'High'],
-  criticalAssets: ['Customer data', 'PHI', 'PCI', 'IP', 'Operational Tech'],
+  criticalAssets: [
+    'Customer data',
+    'Personal data (PII)',
+    'Protected health information (PHI)',
+    'Payment card information (PCI)',
+    'Intellectual property (IP)',
+    'Operational technology',
+    'Financial records and reporting',
+    'Employee records'
+  ],
   annexAControls: questions
     .filter((question) => question.id.startsWith('A.'))
     .map((question) => ({ id: question.id, label: question.control }))
@@ -224,7 +232,6 @@ function createServer() {
   }
 
   return app;
-
 }
 
 if (require.main === module) {
@@ -236,7 +243,6 @@ if (require.main === module) {
         answer: index % 2 === 0 ? 'yes' : 'partial'
       })),
       {
-
         organisationSize: '51-250',
         hostingModel: ['cloud'],
         supplierReliance: 'Medium',

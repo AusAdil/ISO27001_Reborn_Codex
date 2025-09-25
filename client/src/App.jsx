@@ -23,7 +23,6 @@ const serialiseResponses = (responses) =>
     }))
     .filter((entry) => entry.answer !== null || entry.notes || entry.evidence.length > 0 || entry.skipped);
 
-
 const App = () => {
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState('');
@@ -36,7 +35,6 @@ const App = () => {
   const [result, setResult] = useState(null);
   const [view, setView] = useState('onboarding');
   const [scopeNotice, setScopeNotice] = useState('');
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -225,7 +223,6 @@ const App = () => {
 
   const previewItems = scorePreview ? scorePreview.items || [] : [];
 
-
   return (
     <div className="app-shell">
       <header>
@@ -246,7 +243,6 @@ const App = () => {
           onSubmit={handleSubmitWithRatio}
           onAdjustScope={handleAdjustScope}
           buildUrl={buildUrl}
-
         />
       )}
       {view === 'results' && result && (
@@ -263,7 +259,6 @@ const App = () => {
               setError('We could not reset the baseline just now.');
             }
           }}
-
         />
       )}
       {view === 'learning' && result && (

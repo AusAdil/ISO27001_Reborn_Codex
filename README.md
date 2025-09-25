@@ -2,7 +2,6 @@
 
 This repository contains a lightweight Node.js + Express API and a modern React front-end (powered by Vite) that help first-time teams baseline their ISO 27001:2022 readiness, identify gaps and generate a prioritised roadmap.
 
-
 ## Project structure
 
 ```
@@ -12,7 +11,6 @@ This repository contains a lightweight Node.js + Express API and a modern React 
   ├─ data/questions.js  — Seed assessment catalogue (46 controls)
   ├─ data/learning.js   — Plain-English learning snippets
   ├─ data/baseline.json — Stores the persisted baseline result
-
   └─ utils/scoring.js   — Weighted scoring, gap and roadmap logic
 /client/                — React SPA built with Vite
   ├─ index.html         — Vite entry point
@@ -43,7 +41,6 @@ Install dependencies once and then start the API:
 
 ```bash
 npm install
-
 npm start
 ```
 

@@ -127,13 +127,11 @@ const AssessmentFlow = ({
       return;
     }
     setValidationError('');
-
     setIndex((prev) => {
       const next = prev + offset;
       if (next < 0) {
         return 0;
       }
-
       if (next >= inScopeQuestions.length) {
         return inScopeQuestions.length - 1;
       }
@@ -178,9 +176,12 @@ const AssessmentFlow = ({
       <div className="assessment-header">
         <div>
           <h2 style={{ marginBottom: 4 }}>Assessment</h2>
-          <p style={{ margin: 0, color: '#486581' }}>
-            Question {index + 1} of {inScopeQuestions.length} · Theme {currentQuestion.theme}
-          </p>
+          <p style={{ margin: 0, color: '#486581' }}>Question {index + 1} of {inScopeQuestions.length}</p>
+          {currentQuestion && (
+            <p style={{ margin: '4px 0 0', color: '#486581' }}>
+              <strong>Theme:</strong> {currentQuestion.theme}
+            </p>
+          )}
         </div>
         <div className="score-badge" aria-live="polite">
           {answeredCount} of {inScopeQuestions.length} controls answered
@@ -233,7 +234,6 @@ const AssessmentFlow = ({
               Skip
             </button>
           )}
-
           <button type="button" className="secondary" onClick={() => goTo(-1)} disabled={index === 0}>
             Previous
           </button>
@@ -244,7 +244,6 @@ const AssessmentFlow = ({
           )}
           {isLastQuestion && (
             <button type="button" onClick={handleFinish}>
-
               Generate readiness report
             </button>
           )}

@@ -128,7 +128,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-
 .grid {
   display: grid;
   gap: 16px;
@@ -163,7 +162,6 @@ button:focus-visible {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   color: #102a43;
   text-align: left;
-
 }
 
 .option.selected {
@@ -185,7 +183,6 @@ button:focus-visible {
 .option-label {
   font-weight: 600;
 }
-
 
 .progress-bar {
   height: 12px;
@@ -465,7 +462,6 @@ button:focus-visible {
   outline: 3px solid rgba(43, 166, 255, 0.45);
   outline-offset: 2px;
 }
-
 
 @media (max-width: 720px) {
   .card {
