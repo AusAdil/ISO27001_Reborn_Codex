@@ -53,6 +53,7 @@ const onboardingOptions = {
     'Construction & engineering',
     'Other'
   ],
+
   hostingModels: [
     { id: 'cloud', label: 'Cloud' },
     { id: 'on-prem', label: 'On-premises' }
@@ -73,6 +74,7 @@ const onboardingOptions = {
     'Employee records and HR data',
     'Customer support transcripts & recordings',
     'Supplier & contract data'
+
   ],
   annexAControls: questions
     .filter((question) => question.id.startsWith('A.'))
